@@ -96,8 +96,6 @@
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="designide.dcp"/>
         <DCCReference Include="src\core\Boss.IDE.Register.pas"/>
-        <DCCReference Include="src\Boss.IDE.BossInstall.pas"/>
-        <DCCReference Include="src\Boss.IDE.PojectListener.pas"/>
         <DCCReference Include="src\core\Boss.IDE.Installer.pas"/>
         <DCCReference Include="src\core\Boss.Modules.PackageProcessor.pas"/>
         <DCCReference Include="src\providers\Providers.Consts.pas"/>
@@ -111,6 +109,8 @@
         </DCCReference>
         <DCCReference Include="src\providers\Providers.Message.pas"/>
         <DCCReference Include="src\thrid\DosCommand.pas"/>
+        <DCCReference Include="src\services\Boss.IDE.BossInstall.pas"/>
+        <DCCReference Include="src\services\Boss.IDE.PojectListener.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

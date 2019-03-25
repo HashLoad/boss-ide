@@ -28,7 +28,6 @@ type
 
     FProject: IOTAProject;
   public
-    // IOTALocalMenu
     function GetCaption: string;
     function GetChecked: Boolean;
     function GetEnabled: Boolean;

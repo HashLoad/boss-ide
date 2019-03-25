@@ -34,8 +34,6 @@ requires
 
 contains
   Boss.IDE.Register in 'src\core\Boss.IDE.Register.pas',
-  Boss.IDE.BossInstall in 'src\Boss.IDE.BossInstall.pas',
-  Boss.IDE.PojectListener in 'src\Boss.IDE.PojectListener.pas',
   Boss.IDE.Installer in 'src\core\Boss.IDE.Installer.pas',
   Boss.Modules.PackageProcessor in 'src\core\Boss.Modules.PackageProcessor.pas',
   Providers.Consts in 'src\providers\Providers.Consts.pas',
@@ -44,6 +42,8 @@ contains
   CnOTAUtils in 'src\thrid\CnOTAUtils.pas',
   Providers.Logo in 'src\providers\Providers.Logo.pas' {DataModuleLogo: TDataModule},
   Providers.Message in 'src\providers\Providers.Message.pas',
-  DosCommand in 'src\thrid\DosCommand.pas';
+  DosCommand in 'src\thrid\DosCommand.pas',
+  Boss.IDE.BossInstall in 'src\services\Boss.IDE.BossInstall.pas',
+  Boss.IDE.PojectListener in 'src\services\Boss.IDE.PojectListener.pas';
 
 end.
