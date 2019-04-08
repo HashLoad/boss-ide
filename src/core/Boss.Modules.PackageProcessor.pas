@@ -34,7 +34,7 @@ var
 
 constructor TBossPackageProcessor.Create;
 begin
-  FDataFile := TStringList.Create();                                                                                                            .
+  FDataFile := TStringList.Create();
 
   if FileExists(GetDataCachePath) then
     FDataFile.LoadFromFile(GetDataCachePath);
