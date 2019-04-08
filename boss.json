@@ -4,7 +4,9 @@
 	"version": "1.0.0",
 	"homepage": "",
 	"mainsrc": "src/",
-	"dprojFile": "",
+	"projects": [
+		"boss_ide.dproj"
+	],
 	"dependencies": {
 		"github.com/HashLoad/DOSCommand": "^v1.0.0"
 	}
