@@ -6,7 +6,7 @@ uses
   ToolsAPI, System.Generics.Collections, System.SysUtils;
 
 type
-  TBossProjectListener = class(TInterfacedObject, IOTAIDENotifier)
+  TBossProjectListener = class(TNotifierObject, IOTAIDENotifier)
   private
     FListeners: TObjectDictionary<TOTAFileNotification, TList<TProc<string>>>;
 
@@ -77,7 +77,7 @@ end;
 
 procedure TBossProjectListener.Destroyed;
 begin
-
+  FListeners.Free;
 end;
 
 procedure TBossProjectListener.FileNotification(NotifyCode: TOTAFileNotification; const FileName: string;

@@ -9,8 +9,6 @@ type
   TProviderMessage = class
     FService: IOTAMessageServices;
     FGroup: IOTAMessageGroup;
-
-    Constructor Create();
   public
     class function GetInstance: TProviderMessage;
     Procedure Initialize(AService: IOTAMessageServices);
@@ -21,23 +19,18 @@ type
 implementation
 
 var
-  _Instance: TProviderMessage;
+  FInstance: TProviderMessage;
 
 procedure TProviderMessage.Clear;
 begin
   FService.ClearMessageGroup(FGroup);
 end;
 
-Constructor TProviderMessage.Create();
-begin
-
-end;
-
 class function TProviderMessage.GetInstance: TProviderMessage;
 begin
-  if not Assigned(_Instance) then
-    _Instance := TProviderMessage.Create;
-  Result := _Instance;
+  if not Assigned(FInstance) then
+    FInstance := TProviderMessage.Create;
+  Result := FInstance;
 end;
 
 procedure TProviderMessage.Initialize(AService: IOTAMessageServices);

@@ -34,7 +34,7 @@ var
 
 constructor TBossPackageProcessor.Create;
 begin
-  FDataFile := TStringList.Create();
+  FDataFile := TStringList.Create();                                                                                                            .
 
   if FileExists(GetDataCachePath) then
     FDataFile.LoadFromFile(GetDataCachePath);
@@ -71,13 +71,11 @@ end;
 procedure TBossPackageProcessor.LoadBpls(AProjectPath: string);
 var
   LBpls: TArray<string>;
-  LBpl, LBplFullPath: string;
+  LBpl: string;
   LFlag: Integer;
   LHnd: NativeUInt;
 begin
-  TProviderMessage
-    .GetInstance
-    .Clear;
+  TProviderMessage.GetInstance.Clear;
 
   UnloadOlds;
 
@@ -95,10 +93,7 @@ begin
     if not(LFlag and pfRunOnly = pfRunOnly) and TBossIDEInstaller.InstallBpl(LBpl) then
     begin
       FDataFile.Add(LBpl);
-
-      TProviderMessage
-        .GetInstance
-        .WriteLn('Instaled: ' + LBpl);
+      TProviderMessage.GetInstance.WriteLn('Instaled: ' + LBpl);
     end;
   end;
   FDataFile.SaveToFile(GetDataCachePath);
@@ -106,6 +101,8 @@ end;
 
 class procedure TBossPackageProcessor.OnActiveProjectChanged(AProject: string);
 begin
+  TProviderMessage.GetInstance.WriteLn('Loading packages from project ' + AProject);
+
   GetInstance.LoadBpls(ExtractFilePath(AProject) + C_MODULES_FOLDER);
 end;
 
@@ -116,10 +113,7 @@ begin
   for LBpl in FDataFile do
   begin
     TBossIDEInstaller.RemoveBpl(LBpl);
-    TProviderMessage
-      .GetInstance
-      .WriteLn('Removed: ' + LBpl);
-
+    TProviderMessage.GetInstance.WriteLn('Removed: ' + LBpl);
   end;
 
   FDataFile.Clear;
@@ -127,6 +121,7 @@ begin
 end;
 
 initialization
+
 finalization
 
 _Instance.Free;

@@ -15,7 +15,7 @@ type
 implementation
 
 uses
-  System.Classes;
+  System.Classes, Providers.Message, System.SysUtils;
 
 { TBossIDEInstaller }
 
@@ -30,7 +30,12 @@ begin
         LResult := (BorlandIDEServices as IOTAPAckageServices).InstallPackage(AFile)
       end);
   except
-    LResult := False;
+    on E: Exception do
+    begin
+      TProviderMessage.GetInstance.WriteLn('Failed to load ' + AFile);
+      TProviderMessage.GetInstance.WriteLn(#10 + E.Message);
+      LResult := False;
+    end;
   end;
   Result := LResult;
 end;

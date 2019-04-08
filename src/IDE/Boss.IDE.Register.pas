@@ -14,25 +14,27 @@ const
   C_INVALID_NOTIFIER = -1;
 
 var
-  FNotifierMenuIndex,
-  FNotifierProjectIndex: Integer;
+  FNotifierMenuIndex, FNotifierProjectIndex: Integer;
 
 procedure Register;
 var
-  LProjectManager : IOTAProjectManager;
+  LProjectManager: IOTAProjectManager;
   LServices: IOTAServices;
   LMessageServices: IOTAMessageServices;
   LDMLogo: TDataModuleLogo;
   LLogo: TBitmap;
 begin
   ForceDemandLoadState(dlDisable);
-  LDMLogo:= TDataModuleLogo.Create(nil);
+  LDMLogo := TDataModuleLogo.Create(nil);
   try
     LLogo := TBitmap.Create;
-    LDMLogo.ImageList.GetBitmap(0, LLogo);
-    SplashScreenServices.AddPluginBitmap('Boss', LLogo.Handle);
+    try
+      LDMLogo.ImageList.GetBitmap(0, LLogo);
+      SplashScreenServices.AddPluginBitmap('Boss', LLogo.Handle);
+    finally
+      LLogo.Free;
+    end;
   finally
-    LLogo.Free;
     LDMLogo.Free;
   end;
 
@@ -40,24 +42,18 @@ begin
   LServices := (BorlandIDEServices as IOTAServices);
   LMessageServices := (BorlandIDEServices as IOTAMessageServices);
 
-  FNotifierMenuIndex := LProjectManager.AddMenuItemCreatorNotifier
-    (TMenuNotifierBossInstall.Create);
+  FNotifierMenuIndex := LProjectManager.AddMenuItemCreatorNotifier(TMenuNotifierBossInstall.Create);
 
   FNotifierProjectIndex := LServices.AddNotifier(TBossProjectListener.GetInstance);
 
+  TProviderMessage.GetInstance.Initialize(LMessageServices);
 
-  TBossProjectListener
-    .GetInstance
-    .AddListener(ofnActiveProjectChanged, TBossPackageProcessor.OnActiveProjectChanged);
-
-  TProviderMessage
-    .GetInstance
-    .Initialize(LMessageServices);
+  TBossProjectListener.GetInstance.AddListener(ofnActiveProjectChanged, TBossPackageProcessor.OnActiveProjectChanged);
 end;
 
-
-
 initialization
+
+finalization
 
 FNotifierMenuIndex := C_INVALID_NOTIFIER;
 

@@ -2,9 +2,10 @@
 	"name": "boss.ide",
 	"description": "",
 	"version": "1.0.0",
-	"private": false,
 	"homepage": "",
 	"mainsrc": "src/",
-	"supported": "28\r",
-	"dprojFile": ""
+	"dprojFile": "",
+	"dependencies": {
+		"github.com/HashLoad/DOSCommand": "^v1.0.0"
+	}
 }

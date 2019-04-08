@@ -33,17 +33,17 @@ requires
   designide;
 
 contains
-  Boss.IDE.Register in 'src\core\Boss.IDE.Register.pas',
-  Boss.IDE.Installer in 'src\core\Boss.IDE.Installer.pas',
   Boss.Modules.PackageProcessor in 'src\core\Boss.Modules.PackageProcessor.pas',
   Providers.Consts in 'src\providers\Providers.Consts.pas',
-  Boss.Commands in 'src\core\wrap\Boss.Commands.pas',
   CnCommon.lite in 'src\thrid\CnCommon.lite.pas',
   CnOTAUtils in 'src\thrid\CnOTAUtils.pas',
   Providers.Logo in 'src\providers\Providers.Logo.pas' {DataModuleLogo: TDataModule},
   Providers.Message in 'src\providers\Providers.Message.pas',
-  DosCommand in 'src\thrid\DosCommand.pas',
-  Boss.IDE.BossInstall in 'src\services\Boss.IDE.BossInstall.pas',
-  Boss.IDE.PojectListener in 'src\services\Boss.IDE.PojectListener.pas';
+  Boss.Commands in 'src\core\wrapper\Boss.Commands.pas',
+  Boss.IDE.BossInstall in 'src\IDE\Boss.IDE.BossInstall.pas',
+  Boss.IDE.Installer in 'src\IDE\Boss.IDE.Installer.pas',
+  Boss.IDE.PojectListener in 'src\IDE\Boss.IDE.PojectListener.pas',
+  Boss.IDE.Register in 'src\IDE\Boss.IDE.Register.pas';
 
 end.
+
