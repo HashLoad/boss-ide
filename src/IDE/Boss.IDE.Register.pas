@@ -59,11 +59,13 @@ FNotifierMenuIndex := C_INVALID_NOTIFIER;
 
 if FNotifierMenuIndex > C_INVALID_NOTIFIER then
 begin
-  (BorlandIDEServices as IOTAProjectManager).RemoveMenuItemCreatorNotifier(FNotifierMenuIndex);
   (BorlandIDEServices as IOTAServices).RemoveNotifier(FNotifierProjectIndex);
   FNotifierProjectIndex := C_INVALID_NOTIFIER;
+end;
+if FNotifierMenuIndex > C_INVALID_NOTIFIER then
+begin
+  (BorlandIDEServices as IOTAProjectManager).RemoveMenuItemCreatorNotifier(FNotifierMenuIndex);
   FNotifierMenuIndex := C_INVALID_NOTIFIER;
-
 end;
 
 end.

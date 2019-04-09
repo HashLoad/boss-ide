@@ -87,7 +87,8 @@ begin
       GetPackageInfo(LHnd, nil, LFlag, PackageInfoProc);
       UnloadPackage(LHnd);
     except
-      LFlag := 0;
+      TProviderMessage.GetInstance.WriteLn('Failed to get info of ' + LBpl);
+      Continue;
     end;
 
     if not(LFlag and pfRunOnly = pfRunOnly) and TBossIDEInstaller.InstallBpl(LBpl) then

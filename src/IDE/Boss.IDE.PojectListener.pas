@@ -33,7 +33,7 @@ uses
   Winapi.Windows;
 
 var
-  _Instance: TBossProjectListener;
+  FInstance: TBossProjectListener;
 
   { TBossProjectListener }
 
@@ -71,7 +71,6 @@ end;
 
 constructor TBossProjectListener.Create;
 begin
-  _Instance := Self;
   FListeners := TObjectDictionary < TOTAFileNotification, TList < TProc<string> >>.Create([doOwnsValues]);
 end;
 
@@ -97,9 +96,9 @@ end;
 
 class function TBossProjectListener.GetInstance: TBossProjectListener;
 begin
-  if not Assigned(_Instance) then
-    _Instance := TBossProjectListener.Create;
-  Result := _Instance;
+  if not Assigned(FInstance) then
+    FInstance := TBossProjectListener.Create;
+  Result := FInstance;
 end;
 
 procedure TBossProjectListener.Modified;
@@ -116,6 +115,5 @@ begin
     LListeners.Remove(ACallback);
   end;
 end;
-
 
 end.
