@@ -12,8 +12,8 @@ procedure RunBossInstall(APath: string; ALoadPackages: Boolean);
 implementation
 
 uses
-  Winapi.Windows, Vcl.Forms, System.SysUtils, System.Classes, System.Threading, Providers.Message, DosCommand,
-  Boss.Modules.PackageProcessor;
+  Winapi.Windows, Vcl.Forms, System.SysUtils, System.Classes, System.Threading, Providers.Message,
+  Boss.Modules.PackageProcessor, Boss.Ide.DosCommand;
 
 procedure RunBossInstall(APath: string; ALoadPackages: Boolean);
 begin

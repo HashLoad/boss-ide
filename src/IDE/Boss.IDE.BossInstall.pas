@@ -67,7 +67,7 @@ type
 implementation
 
 uses
-  System.SysUtils, CnOTAUtils, Boss.Modules.PackageProcessor, Boss.Commands;
+  System.SysUtils, Boss.Modules.PackageProcessor, Boss.Commands, Boss.Ide.CnOTAUtils;
 
 constructor TButtonBossInstall.Create(aProject: IOTAProject);
 begin

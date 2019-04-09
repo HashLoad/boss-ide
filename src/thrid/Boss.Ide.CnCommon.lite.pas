@@ -1,4 +1,4 @@
-unit CnCommon.lite;
+unit Boss.Ide.CnCommon.lite;
 
 interface
 

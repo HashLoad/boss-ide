@@ -35,15 +35,17 @@ requires
 contains
   Boss.Modules.PackageProcessor in 'src\core\Boss.Modules.PackageProcessor.pas',
   Providers.Consts in 'src\providers\Providers.Consts.pas',
-  CnCommon.lite in 'src\thrid\CnCommon.lite.pas',
-  CnOTAUtils in 'src\thrid\CnOTAUtils.pas',
+  Boss.Ide.CnCommon.lite in 'src\thrid\Boss.Ide.CnCommon.lite.pas',
+  Boss.Ide.CnOTAUtils in 'src\thrid\Boss.Ide.CnOTAUtils.pas',
   Providers.Logo in 'src\providers\Providers.Logo.pas' {DataModuleLogo: TDataModule},
   Providers.Message in 'src\providers\Providers.Message.pas',
   Boss.Commands in 'src\core\wrapper\Boss.Commands.pas',
   Boss.IDE.BossInstall in 'src\IDE\Boss.IDE.BossInstall.pas',
   Boss.IDE.Installer in 'src\IDE\Boss.IDE.Installer.pas',
   Boss.IDE.PojectListener in 'src\IDE\Boss.IDE.PojectListener.pas',
-  Boss.IDE.Register in 'src\IDE\Boss.IDE.Register.pas';
+  Boss.IDE.Register in 'src\IDE\Boss.IDE.Register.pas',
+  Boss.Ide.DosCommand in 'src\thrid\Boss.Ide.DosCommand.pas';
 
 end.
+
 

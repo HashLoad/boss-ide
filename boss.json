@@ -7,7 +7,5 @@
 	"projects": [
 		"boss_ide.dproj"
 	],
-	"dependencies": {
-		"github.com/HashLoad/DOSCommand": "^v1.0.0"
-	}
+	"dependencies": {}
 }
