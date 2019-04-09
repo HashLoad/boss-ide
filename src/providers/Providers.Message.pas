@@ -14,7 +14,6 @@ type
     Procedure Initialize(AService: IOTAMessageServices);
     procedure WriteLn(ALine: string);
     procedure Clear;
-    destructor Destroy; override;
 
   end;
 
@@ -26,12 +25,6 @@ var
 procedure TProviderMessage.Clear;
 begin
   FService.ClearMessageGroup(FGroup);
-end;
-
-destructor TProviderMessage.Destroy;
-begin
-  FService.RemoveMessageGroup(FGroup);
-  inherited;
 end;
 
 class function TProviderMessage.GetInstance: TProviderMessage;

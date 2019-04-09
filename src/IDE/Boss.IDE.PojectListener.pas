@@ -25,6 +25,7 @@ type
     procedure AddListener(AType: TOTAFileNotification; ACallback: TProc<string>);
     procedure RemoveListener(AType: TOTAFileNotification; ACallback: TProc<string>);
     class function GetInstance: TBossProjectListener;
+    destructor Destroy; override;
   end;
 
 implementation
@@ -74,9 +75,14 @@ begin
   FListeners := TObjectDictionary < TOTAFileNotification, TList < TProc<string> >>.Create([doOwnsValues]);
 end;
 
-procedure TBossProjectListener.Destroyed;
+destructor TBossProjectListener.Destroy;
 begin
   FListeners.Free;
+  inherited;
+end;
+
+procedure TBossProjectListener.Destroyed;
+begin
 end;
 
 procedure TBossProjectListener.FileNotification(NotifyCode: TOTAFileNotification; const FileName: string;
