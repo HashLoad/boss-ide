@@ -52,7 +52,7 @@ end;
 
 function TBossPackageProcessor.GetDataCachePath: string;
 begin
-  Result := TPath.GetDocumentsPath + TPath.DirectorySeparatorChar + '..' + TPath.DirectorySeparatorChar +
+  Result := GetEnvironmentVariable('HOMEDRIVE') + GetEnvironmentVariable('HOMEPATH') + TPath.DirectorySeparatorChar +
     C_BOSS_CACHE_FOLDER + TPath.DirectorySeparatorChar + C_DATA_FILE;
 end;
 
