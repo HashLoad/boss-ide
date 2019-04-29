@@ -65,7 +65,7 @@
         <DCC_BplOutput>.\$(Platform)\$(Config)</DCC_BplOutput>
         <VerInfo_Locale>1046</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-        <DCC_UnitSearchPath>modules\DOSCommand\Source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>modules\doscommand\Source;modules\.dcp;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
@@ -116,13 +116,14 @@
         </DelphiCompile>
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="designide.dcp"/>
+        <DCCReference Include="DOSCommandDD.dcp"/>
+        <DCCReference Include="DOSCommandDR.dcp"/>
         <DCCReference Include="src\core\Boss.Modules.PackageProcessor.pas"/>
         <DCCReference Include="src\providers\Providers.Consts.pas"/>
         <DCCReference Include="src\thrid\Boss.Ide.CnCommon.lite.pas"/>
         <DCCReference Include="src\thrid\Boss.Ide.CnOTAUtils.pas"/>
         <DCCReference Include="src\providers\Providers.Logo.pas">
             <Form>DataModuleLogo</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="src\providers\Providers.Message.pas"/>
@@ -131,7 +132,6 @@
         <DCCReference Include="src\IDE\Boss.IDE.Installer.pas"/>
         <DCCReference Include="src\IDE\Boss.IDE.PojectListener.pas"/>
         <DCCReference Include="src\IDE\Boss.IDE.Register.pas"/>
-        <DCCReference Include="src\thrid\Boss.Ide.DosCommand.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -153,10 +153,10 @@
                     <Source Name="MainSource">boss_ide.dpk</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k260.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp260.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k260.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp260.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\rodrigob.DESKTOP-RBM1P42\.boss\modules\3cd0d3eecd360e110c4473e5e247995e\modules\.bpl\DOSCommandDD260.bpl">TurboPack DOSCommand Designtime Package for Delphi</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\rodrigob.DESKTOP-RBM1P42\.boss\modules\3cd0d3eecd360e110c4473e5e247995e\modules\.bpl\DelphiDocker.bpl">Delphi Docker</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">

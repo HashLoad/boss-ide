@@ -13,7 +13,7 @@ implementation
 
 uses
   Winapi.Windows, Vcl.Forms, System.SysUtils, System.Classes, System.Threading, Providers.Message,
-  Boss.Modules.PackageProcessor, Boss.Ide.DosCommand;
+  Boss.Modules.PackageProcessor, DosCommand;
 
 procedure RunBossInstall(APath: string; ALoadPackages: Boolean);
 begin
