@@ -144,7 +144,7 @@ class procedure TBossPackageProcessor.OnActiveProjectChanged(AProject: string);
 begin
   TProviderMessage.GetInstance.WriteLn('Loading packages from project ' + AProject);
 
-  UnloadOlds;
+  GetInstance.UnloadOlds;
   GetInstance.LoadBpls(ExtractFilePath(AProject) + C_MODULES_FOLDER);
   GetInstance.LoadTools(ExtractFilePath(AProject) + C_MODULES_FOLDER);
 end;
