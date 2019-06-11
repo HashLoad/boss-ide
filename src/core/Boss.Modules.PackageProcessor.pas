@@ -89,9 +89,6 @@ var
   LFlag: Integer;
   LHnd: NativeUInt;
 begin
-  TProviderMessage.GetInstance.Clear;
-
-
   LBpls := GetBplList(AProjectPath);
   for LBpl in LBpls do
   begin
@@ -122,8 +119,6 @@ var
   LMenu: TMenuItem;
   LMenuItem: TMenuItem;
 begin
-  TProviderMessage.GetInstance.Clear;
-
   LMenu := NativeServices.MainMenu.Items.Find('Tools');
   LBins := GetBinList(AProjectPath);
 
@@ -147,6 +142,7 @@ end;
 
 class procedure TBossPackageProcessor.OnActiveProjectChanged(AProject: string);
 begin
+  TProviderMessage.GetInstance.Clear;
   TProviderMessage.GetInstance.WriteLn('Loading packages from project ' + AProject);
 
   GetInstance.UnloadOlds;
