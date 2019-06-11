@@ -31,8 +31,8 @@ package boss_ide;
 requires
   rtl,
   designide,
-  DOSCommandDD{BOSS},
-  DOSCommandDR{BOSS};
+  DOSCommandDD,
+  DOSCommandDR;
 
 contains
   Boss.Modules.PackageProcessor in 'src\core\Boss.Modules.PackageProcessor.pas',
@@ -45,8 +45,8 @@ contains
   Boss.IDE.BossInstall in 'src\IDE\Boss.IDE.BossInstall.pas',
   Boss.IDE.Installer in 'src\IDE\Boss.IDE.Installer.pas',
   Boss.IDE.PojectListener in 'src\IDE\Boss.IDE.PojectListener.pas',
-  Boss.IDE.Register in 'src\IDE\Boss.IDE.Register.pas';
+  Boss.IDE.Register in 'src\IDE\Boss.IDE.Register.pas',
+  Boss.Ide.OpenToolApi.Tools in 'src\thrid\Boss.Ide.OpenToolApi.Tools.pas',
+  Boss.EventWrapper in 'src\core\wrapper\Boss.EventWrapper.pas';
 
 end.
-
-

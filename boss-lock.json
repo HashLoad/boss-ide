@@ -1,0 +1,31 @@
+{
+	"hash": "42d5a5b5600b4c7a15edfd5d1cac68fc",
+	"updated": "2019-06-11T01:52:32.3290854-03:00",
+	"installedModules": {
+		"github.com/hashload/doscommand": {
+			"name": "doscommand",
+			"version": "1.0.3",
+			"hash": "fd4d194b03552bdf4bb6371b52aa1ae2",
+			"artifacts": {
+				"bin": [],
+				"dcp": [
+					"DOSCommandDR.bpi",
+					"DOSCommandDR.dcp",
+					"DOSCommandDR.lib",
+					"DOSCommandDD.bpi",
+					"DOSCommandDD.dcp",
+					"DOSCommandDD.lib"
+				],
+				"dcu": [
+					"DosCommand.dcu",
+					"DosCommand.Register.dcu"
+				],
+				"bpl": [
+					"DOSCommandDR260.bpl",
+					"DOSCommandDD260.bpl"
+				]
+			},
+			"failed": false
+		}
+	}
+}
