@@ -77,6 +77,11 @@ begin
   Result := _Instance;
 end;
 
+procedure PackageInfoProc(const Name: string; NameType: TNameType; Flags: Byte; Param: Pointer);
+begin
+
+end;
+
 procedure TBossPackageProcessor.LoadBpls(AProjectPath: string);
 var
   LBpls: TArray<string>;
@@ -92,7 +97,7 @@ begin
   begin
     try
       LHnd := LoadPackage(LBpl);
-      GetPackageInfo(LHnd, nil, LFlag, nil);
+      GetPackageInfo(LHnd, nil, LFlag, PackageInfoProc);
       UnloadPackage(LHnd);
     except
       TProviderMessage.GetInstance.WriteLn('Failed to get info of ' + LBpl);
