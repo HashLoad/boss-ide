@@ -114,8 +114,6 @@ procedure TBossPackageProcessor.LoadTools(AProjectPath: string);
 var
   LBins: TStringDynArray;
   LBin, LBinName: string;
-  LFlag: Integer;
-  LHnd: NativeUInt;
   LMenu: TMenuItem;
   LMenuItem: TMenuItem;
 begin
@@ -153,9 +151,7 @@ end;
 procedure TBossPackageProcessor.UnloadOlds;
 var
   LBpl: string;
-  LBin, LBinName: string;
   LFlag: Integer;
-  LHnd: NativeUInt;
   LMenu: TMenuItem;
   LMenuItem: TMenuItem;
   LIndex: Integer;
