@@ -4,15 +4,15 @@ unit Boss.Modules.PackageProcessor;
 interface
 
 uses
-  System.IniFiles, System.Classes, System.SysUtils;
+  System.IniFiles, System.Classes, System.SysUtils, System.Types;
 
 type
   TBossPackageProcessor = class
   private
     FDataFile: TStringList;
 
-    function GetBplList(ARootPath: string): TArray<string>;
-    function GetBinList(ARootPath: string): TArray<string>;
+    function GetBplList(ARootPath: string): TStringDynArray;
+    function GetBinList(ARootPath: string): TStringDynArray;
 
     function GetDataCachePath: string;
 
@@ -47,7 +47,7 @@ begin
   UnloadOlds;
 end;
 
-function TBossPackageProcessor.GetBinList(ARootPath: string): TArray<string>;
+function TBossPackageProcessor.GetBinList(ARootPath: string): TStringDynArray;
 begin
   if not DirectoryExists(ARootPath + C_BIN_FOLDER) then
     Exit();
@@ -55,7 +55,7 @@ begin
   Result := TDirectory.GetFiles(ARootPath + C_BIN_FOLDER, '*.exe')
 end;
 
-function TBossPackageProcessor.GetBplList(ARootPath: string): TArray<string>;
+function TBossPackageProcessor.GetBplList(ARootPath: string): TStringDynArray;
 begin
   if not DirectoryExists(ARootPath + C_BPL_FOLDER) then
     Exit();
@@ -84,7 +84,7 @@ end;
 
 procedure TBossPackageProcessor.LoadBpls(AProjectPath: string);
 var
-  LBpls: TArray<string>;
+  LBpls: TStringDynArray;
   LBpl: string;
   LFlag: Integer;
   LHnd: NativeUInt;
@@ -112,7 +112,7 @@ end;
 
 procedure TBossPackageProcessor.LoadTools(AProjectPath: string);
 var
-  LBins: TArray<string>;
+  LBins: TStringDynArray;
   LBin, LBinName: string;
   LFlag: Integer;
   LHnd: NativeUInt;
