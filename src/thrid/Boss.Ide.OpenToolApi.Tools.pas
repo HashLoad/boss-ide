@@ -544,13 +544,8 @@ End;
 
 **)
 Procedure OutputText(Writer : IOTAEditWriter; iIndent : Integer; strText : String);
-
 Begin
-  {$IFNDEF D2009}
-  Writer.Insert(PAnsiChar(StringOfChar(#32, iIndent) + strText));
-  {$ELSE}
   Writer.Insert(PAnsiChar(AnsiString(StringOfChar(#32, iIndent) + strText)));
-  {$ENDIF}
 End;
 
 { TCustomMessage Methods }
@@ -706,16 +701,12 @@ Var
 Begin
   SetLength(FMsg, Length(strMsg));
   iLength := 0;
-  For i := 1 To Length(strMsg) Do
-    {$IFDEF D2009}
-    If CharInSet(strMsg[i], strValidChars) Then
-    {$ELSE}
-    If strMsg[i] In strValidChars Then
-    {$ENDIF}
-      Begin
+  for i := 1 To Length(strMsg) Do
+    if CharInSet(strMsg[i], strValidChars) Then
+      begin
         FMsg[iLength + 1] := strMsg[i];
         Inc(iLength);
-      End;
+      end;
   SetLength(FMsg, iLength);
   FFontName := FontName;
   FForeColour := ForeColour;
@@ -1131,7 +1122,6 @@ Begin
   {$ENDIF}
 End;
 
-
 function NativeServices: INTAServices;
 begin
   Result := (BorlandIDEServices as INTAServices);
@@ -1141,8 +1131,10 @@ end;
     removed from the IDE. **)
 Initialization
   FOTAActions := TObjectList.Create(True);
+
 (** Frees the actions and in doing so removes them from the IDE. **)
 Finalization
   RemoveToolbarButtonsAssociatedWithActions;
   FOTAActions.Free;
+
 End.

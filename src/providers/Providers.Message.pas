@@ -2,8 +2,7 @@ unit Providers.Message;
 
 interface
 
-uses
-  ToolsAPI;
+uses ToolsAPI;
 
 type
   TProviderMessage = class
@@ -11,10 +10,9 @@ type
     FGroup: IOTAMessageGroup;
   public
     class function GetInstance: TProviderMessage;
-    Procedure Initialize(AService: IOTAMessageServices);
+    procedure Initialize(AService: IOTAMessageServices);
     procedure WriteLn(ALine: string);
     procedure Clear;
-
   end;
 
 implementation
@@ -53,8 +51,7 @@ end;
 initialization
 
 finalization
-
-if Assigned(FInstance) then
-  FInstance.Free;
+  if Assigned(FInstance) then
+    FInstance.Free;
 
 end.

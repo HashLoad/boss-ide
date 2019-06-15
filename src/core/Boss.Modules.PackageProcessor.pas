@@ -151,7 +151,6 @@ end;
 procedure TBossPackageProcessor.UnloadOlds;
 var
   LBpl: string;
-  LFlag: Integer;
   LMenu: TMenuItem;
   LMenuItem: TMenuItem;
   LIndex: Integer;
