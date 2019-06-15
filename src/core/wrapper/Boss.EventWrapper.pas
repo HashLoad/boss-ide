@@ -2,15 +2,14 @@ unit Boss.EventWrapper;
 
 interface
 
-uses
-  System.Classes, System.SysUtils;
+uses System.Classes, System.SysUtils;
 
 type
   TNotifyEventWrapper = class(TComponent)
   private
     FPath: string;
   public
-    constructor Create(APath: String);
+    constructor Create(APath: String); reintroduce;
   published
     procedure Event(Sender: TObject);
   end;
@@ -19,8 +18,7 @@ function GetOpenEvent(APath: String): TNotifyEvent;
 
 implementation
 
-uses
-  Winapi.ShellAPI, Boss.Ide.OpenToolApi.Tools, Winapi.Windows;
+uses Winapi.ShellAPI, Boss.Ide.OpenToolApi.Tools, Winapi.Windows;
 
 constructor TNotifyEventWrapper.Create(APath: String);
 begin

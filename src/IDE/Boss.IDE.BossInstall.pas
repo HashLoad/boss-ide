@@ -2,11 +2,9 @@ unit Boss.IDE.BossInstall;
 
 interface
 
-uses
-  ToolsAPI, Vcl.ActnList, System.Classes;
+uses ToolsAPI, Vcl.ActnList, System.Classes;
 
 type
-
   TMenuNotifierBossInstall = class(TNotifierObject, IOTANotifier, IOTAProjectMenuItemCreatorNotifier)
   public
     function CanHandle(const Ident: string): Boolean;
@@ -14,7 +12,7 @@ type
       const ProjectManagerMenuList: IInterfaceList; IsMultiSelect: Boolean);
   end;
 
-  TButtonBossInstall = class(TNotifierObject, IOTALocalMenu, IOTAProjectManagerMenu)
+  TButtonBoss = class(TNotifierObject, IOTALocalMenu, IOTAProjectManagerMenu)
   private
     FCaption: string;
     FChecked: Boolean;
@@ -25,9 +23,9 @@ type
     FPosition: Integer;
     FVerb: string;
     FOnExecute: TNotifyEvent;
-
     FProject: IOTAProject;
   public
+    { IOTALocalMenu }
     function GetCaption: string;
     function GetChecked: Boolean;
     function GetEnabled: Boolean;
@@ -54,137 +52,140 @@ type
     property Verb: string read GetVerb write SetVerb;
     property OnExute: TNotifyEvent read FOnExecute write FOnExecute;
 
-    // IOTAProjectManagerMenu
+    { IOTAProjectManagerMenu }
     function GetIsMultiSelectable: Boolean;
     procedure SetIsMultiSelectable(Value: Boolean);
     procedure Execute(const MenuContextList: IInterfaceList); overload;
     function PreExecute(const MenuContextList: IInterfaceList): Boolean;
     function PostExecute(const MenuContextList: IInterfaceList): Boolean;
     property IsMultiSelectable: Boolean read GetIsMultiSelectable write SetIsMultiSelectable;
-    constructor Create(aProject: IOTAProject);
+
+    constructor Create(aProject: IOTAProject); virtual;
+  end;
+
+  TButtonBossSeparator = class(TButtonBoss)
+  public
+    constructor Create(aProject: IOTAProject); override;
+  end;
+
+  TButtonBossInstall = class(TButtonBoss)
+  public
+    constructor Create(aProject: IOTAProject); override;
   end;
 
 implementation
 
-uses
-  System.SysUtils, Boss.Modules.PackageProcessor, Boss.Commands, Boss.Ide.CnOTAUtils;
+uses System.SysUtils, Boss.Modules.PackageProcessor, Boss.Commands, Boss.Ide.CnOTAUtils;
 
-constructor TButtonBossInstall.Create(aProject: IOTAProject);
+constructor TButtonBoss.Create(aProject: IOTAProject);
 begin
-  Self.Caption := 'Boss install';
   Self.Enabled := True;
-  Self.Position := pmmpInstall + 10;
-
   FProject := aProject;
 end;
 
-procedure TButtonBossInstall.Execute(const MenuContextList: IInterfaceList);
+procedure TButtonBoss.Execute(const MenuContextList: IInterfaceList);
 begin
-
   if CnOtaGetCurrentProject = FProject then
-    TBossPackageProcessor
-      .GetInstance
-      .UnloadOlds;
-
+    TBossPackageProcessor.GetInstance.UnloadOlds;
   RunBossInstall(ExtractFilePath(FProject.FileName), CnOtaGetCurrentProject = FProject);
 end;
 
-function TButtonBossInstall.GetCaption: string;
+function TButtonBoss.GetCaption: string;
 begin
   Result := FCaption;
 end;
 
-function TButtonBossInstall.GetChecked: Boolean;
+function TButtonBoss.GetChecked: Boolean;
 begin
   Result := FChecked;
 end;
 
-function TButtonBossInstall.GetEnabled: Boolean;
+function TButtonBoss.GetEnabled: Boolean;
 begin
   Result := FEnabled;
 end;
 
-function TButtonBossInstall.GetHelpContext: Integer;
+function TButtonBoss.GetHelpContext: Integer;
 begin
   Result := FHelpContext;
 end;
 
-function TButtonBossInstall.GetIsMultiSelectable: Boolean;
+function TButtonBoss.GetIsMultiSelectable: Boolean;
 begin
   Result := False;
 end;
 
-function TButtonBossInstall.GetName: string;
+function TButtonBoss.GetName: string;
 begin
   Result := FName;
 end;
 
-function TButtonBossInstall.GetParent: string;
+function TButtonBoss.GetParent: string;
 begin
   Result := FParent;
 end;
 
-function TButtonBossInstall.GetPosition: Integer;
+function TButtonBoss.GetPosition: Integer;
 begin
   Result := FPosition;
 end;
 
-function TButtonBossInstall.GetVerb: string;
+function TButtonBoss.GetVerb: string;
 begin
   Result := FVerb;
 end;
 
-function TButtonBossInstall.PostExecute(const MenuContextList: IInterfaceList): Boolean;
+function TButtonBoss.PostExecute(const MenuContextList: IInterfaceList): Boolean;
 begin
   Result := True;
 end;
 
-function TButtonBossInstall.PreExecute(const MenuContextList: IInterfaceList): Boolean;
+function TButtonBoss.PreExecute(const MenuContextList: IInterfaceList): Boolean;
 begin
   Result := True;
 end;
 
-procedure TButtonBossInstall.SetCaption(const Value: string);
+procedure TButtonBoss.SetCaption(const Value: string);
 begin
   FCaption := Value;
 end;
 
-procedure TButtonBossInstall.SetChecked(Value: Boolean);
+procedure TButtonBoss.SetChecked(Value: Boolean);
 begin
   FChecked := Value;
 end;
 
-procedure TButtonBossInstall.SetEnabled(Value: Boolean);
+procedure TButtonBoss.SetEnabled(Value: Boolean);
 begin
   FEnabled := Value;
 end;
 
-procedure TButtonBossInstall.SetHelpContext(Value: Integer);
+procedure TButtonBoss.SetHelpContext(Value: Integer);
 begin
   FHelpContext := Value;
 end;
 
-procedure TButtonBossInstall.SetIsMultiSelectable(Value: Boolean);
+procedure TButtonBoss.SetIsMultiSelectable(Value: Boolean);
 begin
   IsMultiSelectable := Value;
 end;
 
-procedure TButtonBossInstall.SetName(const Value: string);
+procedure TButtonBoss.SetName(const Value: string);
 begin
   FName := Value;
 end;
 
-procedure TButtonBossInstall.SetParent(const Value: string);
+procedure TButtonBoss.SetParent(const Value: string);
 begin
   FParent := Value;
 end;
 
-procedure TButtonBossInstall.SetPosition(Value: Integer);
+procedure TButtonBoss.SetPosition(Value: Integer);
 begin
   FPosition := Value;
 end;
 
-procedure TButtonBossInstall.SetVerb(const Value: string);
+procedure TButtonBoss.SetVerb(const Value: string);
 begin
   FVerb := Value;
 end;
@@ -197,6 +198,7 @@ begin
   if CanHandle(Project.ApplicationType) and (not IsMultiSelect) and Assigned(Project) and
     (IdentList.IndexOf(sProjectContainer) <> -1) and Assigned(ProjectManagerMenuList) then
   begin
+    ProjectManagerMenuList.Add(TButtonBossSeparator.Create(Project));
     ProjectManagerMenuList.Add(TButtonBossInstall.Create(Project));
   end;
 end;
@@ -204,6 +206,24 @@ end;
 function TMenuNotifierBossInstall.CanHandle(const Ident: string): Boolean;
 begin
   Result := (Ident = sApplication) or (Ident = sConsole) or (Ident = sPackage);
+end;
+
+{ TButtonBossSeparator }
+
+constructor TButtonBossSeparator.Create(aProject: IOTAProject);
+begin
+  inherited Create(aProject);
+  Self.Caption := '-';
+  Self.Position := pmmpRunNoDebug + 10;
+end;
+
+{ TButtonBossInstall }
+
+constructor TButtonBossInstall.Create(aProject: IOTAProject);
+begin
+  inherited Create(aProject);
+  Self.Caption := 'Boss install';
+  Self.Position := pmmpRunNoDebug + 20;
 end;
 
 end.
