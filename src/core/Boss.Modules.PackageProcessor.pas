@@ -1,6 +1,5 @@
 unit Boss.Modules.PackageProcessor;
 
-
 interface
 
 uses
@@ -16,15 +15,24 @@ type
 
     function GetDataCachePath: string;
 
+    procedure LoadTools(AProjectPath: string);
+    procedure SetBossPath(AProjectPath: string);
+
     constructor Create;
   public
     procedure LoadBpls(AProjectPath: string);
-    procedure LoadTools(AProjectPath: string);
     procedure UnloadOlds;
 
     class Procedure OnActiveProjectChanged(AProject: string);
     class function GetInstance: TBossPackageProcessor;
   end;
+
+
+const
+  PATH = 'PATH';
+  BOSS_VAR = 'BOSS_PROJECT';
+  BPLS = 'BPLS';
+  DELIMITER = ';';
 
 implementation
 
@@ -36,6 +44,11 @@ uses
 
 var
   _Instance: TBossPackageProcessor;
+
+procedure TBossPackageProcessor.SetBossPath(AProjectPath: string);
+begin
+  SetEnvironmentVariable(PChar(BOSS_VAR), PChar(AProjectPath +  TPath.DirectorySeparatorChar + C_BPL_FOLDER));
+end;
 
 constructor TBossPackageProcessor.Create;
 begin
@@ -69,7 +82,6 @@ begin
     C_BOSS_CACHE_FOLDER + TPath.DirectorySeparatorChar + C_DATA_FILE;
 end;
 
-
 class function TBossPackageProcessor.GetInstance: TBossPackageProcessor;
 begin
   if not Assigned(_Instance) then
@@ -89,6 +101,7 @@ var
   LFlag: Integer;
   LHnd: NativeUInt;
 begin
+  SetBossPath(AProjectPath);
   LBpls := GetBplList(AProjectPath);
   for LBpl in LBpls do
   begin
@@ -103,7 +116,7 @@ begin
 
     if not(LFlag and pfRunOnly = pfRunOnly) and TBossIDEInstaller.InstallBpl(LBpl) then
     begin
-      FDataFile.Add(LBpl);
+      FDataFile.Values[BPLS] := FDataFile.Values[BPLS] + DELIMITER + LBpl;
       TProviderMessage.GetInstance.WriteLn('Instaled: ' + LBpl);
     end;
   end;
@@ -155,7 +168,7 @@ var
   LMenuItem: TMenuItem;
   LIndex: Integer;
 begin
-  for LBpl in FDataFile do
+  for LBpl in FDataFile.Values[BPLS].Split([DELIMITER]) do
   begin
     TBossIDEInstaller.RemoveBpl(LBpl);
     TProviderMessage.GetInstance.WriteLn('Removed: ' + LBpl);
@@ -178,7 +191,7 @@ begin
     NativeServices.MenuEndUpdate;
   end;
 
-  FDataFile.Clear;
+  FDataFile.Values[BPLS] := EmptyStr;
   FDataFile.SaveToFile(GetDataCachePath);
 end;
 
@@ -189,4 +202,3 @@ finalization
 _Instance.Free;
 
 end.
-

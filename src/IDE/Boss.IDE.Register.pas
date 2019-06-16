@@ -8,7 +8,7 @@ implementation
 
 uses
   ToolsAPI, Winapi.Windows, Boss.IDE.BossInstall, Boss.IDE.PojectListener, Boss.Modules.PackageProcessor,
-  Vcl.Graphics, DesignIntf, System.Types, Providers.Logo, Providers.Message;
+  Vcl.Graphics, DesignIntf, System.Types, Providers.Logo, Providers.Message, Boss.Ide.OpenToolApi.Tools;
 
 const
   C_INVALID_NOTIFIER = -1;
@@ -39,7 +39,10 @@ begin
   end;
 
   LProjectManager := (BorlandIDEServices as IOTAProjectManager);
+
   LServices := (BorlandIDEServices as IOTAServices);
+
+
   LMessageServices := (BorlandIDEServices as IOTAMessageServices);
 
   FNotifierMenuIndex := LProjectManager.AddMenuItemCreatorNotifier(TMenuNotifierBossInstall.Create);

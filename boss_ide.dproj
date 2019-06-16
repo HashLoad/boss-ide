@@ -84,10 +84,10 @@
         <Debugger_RunParams> -debug</Debugger_RunParams>
         <VerInfo_Keys>CompanyName=Hashload;FileDescription=Boss IDE Tool;FileVersion=1.0.0.0;InternalName=Boss_ide;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=Boss IDE;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_Description>Boss IDE Tool</DCC_Description>
-        <DCC_UsePackage>rtl;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>rtl;DOSCommandDR;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
-        <DCC_UsePackage>rtl;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>rtl;DOSCommandDR;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
