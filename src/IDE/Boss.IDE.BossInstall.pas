@@ -75,7 +75,7 @@ type
 
 implementation
 
-uses System.SysUtils, Boss.Modules.PackageProcessor, Boss.Commands, Boss.Ide.CnOTAUtils;
+uses System.SysUtils, Boss.Modules.PackageProcessor, Boss.Commands, Boss.Ide.CnOTAUtils, Providers.Consts;
 
 constructor TButtonBoss.Create(aProject: IOTAProject);
 begin
@@ -214,7 +214,7 @@ constructor TButtonBossSeparator.Create(aProject: IOTAProject);
 begin
   inherited Create(aProject);
   Self.Caption := '-';
-  Self.Position := pmmpRunNoDebug + 10;
+  Self.Position := C_BUTTON_SEPARATOR_POSITION;
 end;
 
 { TButtonBossInstall }
@@ -223,7 +223,7 @@ constructor TButtonBossInstall.Create(aProject: IOTAProject);
 begin
   inherited Create(aProject);
   Self.Caption := 'Boss install';
-  Self.Position := pmmpRunNoDebug + 20;
+  Self.Position := C_BUTTON_INSTALL_POSITION;
 end;
 
 end.
