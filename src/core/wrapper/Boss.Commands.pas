@@ -35,7 +35,7 @@ begin
       LDosCommand.Free;
       if ALoadPackages then
       begin
-        TBossPackageProcessor.GetInstance.LoadBpls(APath);
+        TBossPackageProcessor.GetInstance.LoadBpls;
       end;
     end;
 

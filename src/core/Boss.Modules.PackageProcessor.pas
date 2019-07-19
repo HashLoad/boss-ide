@@ -8,19 +8,18 @@ uses
 type
   TBossPackageProcessor = class
   private
-    FDataFile: TStringList;
-
     function GetBplList(ARootPath: string): TStringDynArray;
     function GetBinList(ARootPath: string): TStringDynArray;
 
-    function GetDataCachePath: string;
+    function GetEnv: string;
 
     procedure LoadTools(AProjectPath: string);
-    procedure SetBossPath(AProjectPath: string);
+    procedure MakeLink(AProjectPath: string);
+    procedure DoLoadBpls(ABpls: TArray<string>);
 
     constructor Create;
   public
-    procedure LoadBpls(AProjectPath: string);
+    procedure LoadBpls;
     procedure UnloadOlds;
 
     class Procedure OnActiveProjectChanged(AProject: string);
@@ -29,8 +28,6 @@ type
 
 
 const
-  PATH = 'PATH';
-  BOSS_VAR = 'BOSS_PROJECT';
   BPLS = 'BPLS';
   DELIMITER = ';';
 
@@ -38,25 +35,65 @@ implementation
 
 uses
   System.IOUtils, Providers.Consts, Boss.IDE.Installer, Providers.Message, Vcl.Dialogs, ToolsAPI,
-  Boss.IDE.OpenToolApi.Tools, Winapi.ShellAPI, Winapi.Windows, Vcl.Menus, Boss.EventWrapper;
+  Boss.IDE.OpenToolApi.Tools, Winapi.ShellAPI, Winapi.Windows, Vcl.Menus, Boss.EventWrapper, Vcl.Forms;
 
 { TBossPackageProcessor }
+
+const
+  SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE = $2 platform;
 
 var
   _Instance: TBossPackageProcessor;
 
-procedure TBossPackageProcessor.SetBossPath(AProjectPath: string);
+procedure ExecuteAndWait(const aCommando: string);
+var
+  tmpStartupInfo: TStartupInfo;
+  tmpProcessInformation: TProcessInformation;
+  tmpProgram: String;
 begin
-  SetEnvironmentVariable(PChar(BOSS_VAR), PChar(AProjectPath +  TPath.DirectorySeparatorChar + C_BPL_FOLDER));
+  tmpProgram := trim(aCommando);
+  FillChar(tmpStartupInfo, SizeOf(tmpStartupInfo), 0);
+  with tmpStartupInfo do
+  begin
+    cb := SizeOf(TStartupInfo);
+    wShowWindow := SW_HIDE;
+  end;
+
+  if CreateProcess(nil, pchar(tmpProgram), nil, nil, true, CREATE_NO_WINDOW,
+    nil, nil, tmpStartupInfo, tmpProcessInformation) then
+  begin
+    while WaitForSingleObject(tmpProcessInformation.hProcess, 10) > 0 do
+    begin
+      Application.ProcessMessages;
+    end;
+    CloseHandle(tmpProcessInformation.hProcess);
+    CloseHandle(tmpProcessInformation.hThread);
+  end
+  else
+  begin
+    RaiseLastOSError;
+  end;
+end;
+
+function TBossPackageProcessor.GetEnv: string;
+begin
+  Result := GetEnvironmentVariable('HOMEDRIVE') + GetEnvironmentVariable('HOMEPATH') + TPath.DirectorySeparatorChar +
+    C_BOSS_CACHE_FOLDER + TPath.DirectorySeparatorChar + C_ENV;
+end;
+
+
+procedure TBossPackageProcessor.MakeLink(AProjectPath: string);
+var
+  LCommand: PChar;
+begin
+  RemoveDir(Pchar(GetEnv));
+  LCommand := PChar(Format('cmd /c Mklink /D /J "%s" "%s"',
+    [GetEnv, AProjectPath + TPath.DirectorySeparatorChar + C_MODULES_FOLDER + C_BPL_FOLDER]));
+  ExecuteAndWait(LCommand);
 end;
 
 constructor TBossPackageProcessor.Create;
 begin
-  FDataFile := TStringList.Create();
-
-  if FileExists(GetDataCachePath) then
-    FDataFile.LoadFromFile(GetDataCachePath);
-
   UnloadOlds;
 end;
 
@@ -70,16 +107,10 @@ end;
 
 function TBossPackageProcessor.GetBplList(ARootPath: string): TStringDynArray;
 begin
-  if not DirectoryExists(ARootPath + C_BPL_FOLDER) then
+  if not DirectoryExists(ARootPath) then
     Exit();
 
-  Result := TDirectory.GetFiles(ARootPath + C_BPL_FOLDER, '*.bpl')
-end;
-
-function TBossPackageProcessor.GetDataCachePath: string;
-begin
-  Result := GetEnvironmentVariable('HOMEDRIVE') + GetEnvironmentVariable('HOMEPATH') + TPath.DirectorySeparatorChar +
-    C_BOSS_CACHE_FOLDER + TPath.DirectorySeparatorChar + C_DATA_FILE;
+  Result := TDirectory.GetFiles(ARootPath, '*.bpl')
 end;
 
 class function TBossPackageProcessor.GetInstance: TBossPackageProcessor;
@@ -94,16 +125,26 @@ begin
 
 end;
 
-procedure TBossPackageProcessor.LoadBpls(AProjectPath: string);
+procedure TBossPackageProcessor.LoadBpls;
 var
   LBpls: TStringDynArray;
+begin
+  LBpls := GetBplList(GetEnv);
+  DoLoadBpls(LBpls);
+end;
+
+procedure TBossPackageProcessor.DoLoadBpls(ABpls: TArray<string>);
+var
   LBpl: string;
   LFlag: Integer;
   LHnd: NativeUInt;
+  LBplsRedo: TStringDynArray;
+  LInstalledNew: Boolean;
 begin
-  SetBossPath(AProjectPath);
-  LBpls := GetBplList(AProjectPath);
-  for LBpl in LBpls do
+  LInstalledNew := False;
+  LBplsRedo := [];
+
+  for LBpl in ABpls do
   begin
     try
       LHnd := LoadPackage(LBpl);
@@ -111,16 +152,26 @@ begin
       UnloadPackage(LHnd);
     except
       TProviderMessage.GetInstance.WriteLn('Failed to get info of ' + LBpl);
+      LBplsRedo := LBplsRedo + [LBpl];
       Continue;
     end;
 
-    if not(LFlag and pfRunOnly = pfRunOnly) and TBossIDEInstaller.InstallBpl(LBpl) then
+    if not(LFlag and pfRunOnly = pfRunOnly) then
     begin
-      FDataFile.Values[BPLS] := FDataFile.Values[BPLS] + DELIMITER + LBpl;
-      TProviderMessage.GetInstance.WriteLn('Instaled: ' + LBpl);
+      if TBossIDEInstaller.InstallBpl(LBpl) then
+      begin
+        TProviderMessage.GetInstance.WriteLn('Instaled: ' + LBpl);
+        LInstalledNew := True;
+      end
+      else
+        LBplsRedo := LBplsRedo + [LBpl];
     end;
   end;
-  FDataFile.SaveToFile(GetDataCachePath);
+
+  if LInstalledNew then
+  begin
+    DoLoadBpls(LBplsRedo);
+  end;
 end;
 
 procedure TBossPackageProcessor.LoadTools(AProjectPath: string);
@@ -148,7 +199,6 @@ begin
   finally
     NativeServices.MenuEndUpdate;
   end;
-  FDataFile.SaveToFile(GetDataCachePath);
 end;
 
 class procedure TBossPackageProcessor.OnActiveProjectChanged(AProject: string);
@@ -157,7 +207,8 @@ begin
   TProviderMessage.GetInstance.WriteLn('Loading packages from project ' + AProject);
 
   GetInstance.UnloadOlds;
-  GetInstance.LoadBpls(ExtractFilePath(AProject) + C_MODULES_FOLDER);
+  GetInstance.MakeLink(ExtractFilePath(AProject));
+  GetInstance.LoadBpls;
   GetInstance.LoadTools(ExtractFilePath(AProject) + C_MODULES_FOLDER);
 end;
 
@@ -168,7 +219,7 @@ var
   LMenuItem: TMenuItem;
   LIndex: Integer;
 begin
-  for LBpl in FDataFile.Values[BPLS].Split([DELIMITER]) do
+  for LBpl in GetBplList(GetEnv) do
   begin
     TBossIDEInstaller.RemoveBpl(LBpl);
     TProviderMessage.GetInstance.WriteLn('Removed: ' + LBpl);
@@ -190,9 +241,6 @@ begin
   finally
     NativeServices.MenuEndUpdate;
   end;
-
-  FDataFile.Values[BPLS] := EmptyStr;
-  FDataFile.SaveToFile(GetDataCachePath);
 end;
 
 initialization
