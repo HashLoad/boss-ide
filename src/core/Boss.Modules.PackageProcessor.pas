@@ -45,29 +45,26 @@ const
 var
   _Instance: TBossPackageProcessor;
 
-procedure ExecuteAndWait(const aCommando: string);
+procedure ExecuteAndWait(const ACommand: string);
 var
-  tmpStartupInfo: TStartupInfo;
-  tmpProcessInformation: TProcessInformation;
-  tmpProgram: String;
+  LStartup: TStartupInfo;
+  LProcess: TProcessInformation;
+  LProgram: String;
 begin
-  tmpProgram := trim(aCommando);
-  FillChar(tmpStartupInfo, SizeOf(tmpStartupInfo), 0);
-  with tmpStartupInfo do
-  begin
-    cb := SizeOf(TStartupInfo);
-    wShowWindow := SW_HIDE;
-  end;
+  LProgram := Trim(ACommand);
+  FillChar(LStartup, SizeOf(LStartup), 0);
+  LStartup.cb := SizeOf(TStartupInfo);
+  LStartup.wShowWindow := SW_HIDE;
 
-  if CreateProcess(nil, pchar(tmpProgram), nil, nil, true, CREATE_NO_WINDOW,
-    nil, nil, tmpStartupInfo, tmpProcessInformation) then
+  if CreateProcess(nil, pchar(LProgram), nil, nil, true, CREATE_NO_WINDOW,
+    nil, nil, LStartup, LProcess) then
   begin
-    while WaitForSingleObject(tmpProcessInformation.hProcess, 10) > 0 do
+    while WaitForSingleObject(LProcess.hProcess, 10) > 0 do
     begin
       Application.ProcessMessages;
     end;
-    CloseHandle(tmpProcessInformation.hProcess);
-    CloseHandle(tmpProcessInformation.hThread);
+    CloseHandle(LProcess.hProcess);
+    CloseHandle(LProcess.hThread);
   end
   else
   begin
