@@ -78,6 +78,9 @@ function TBossPackageProcessor.GetEnv(AEnv: string): string;
 begin
   Result := GetEnvironmentVariable('HOMEDRIVE') + GetEnvironmentVariable('HOMEPATH') + TPath.DirectorySeparatorChar +
     C_BOSS_CACHE_FOLDER + TPath.DirectorySeparatorChar + C_ENV + AEnv;
+
+  if DirectoryExists(GetEnv(EmptyStr)) then
+    ForceDirectories(GetEnv(EmptyStr));
 end;
 
 
