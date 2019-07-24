@@ -82,6 +82,16 @@ begin
     + C_ENV + AEnv;
 end;
 
+procedure DeleteDirectory(const DirName: string);
+var
+  FileOp: TSHFileOpStruct;
+begin
+  FillChar(FileOp, SizeOf(FileOp), 0);
+  FileOp.wFunc := FO_DELETE;
+  FileOp.pFrom := PChar(DirName+#0);
+  FileOp.fFlags := FOF_SILENT or FOF_NOERRORUI or FOF_NOCONFIRMATION;
+  SHFileOperation(FileOp);
+end;
 
 procedure TBossPackageProcessor.MakeLink(AProjectPath, AEnv: string);
 var
@@ -90,7 +100,7 @@ var
 begin
   try
     if DirectoryExists(GetEnv(AEnv)) then
-      TFile.Delete(GetEnv(AEnv));
+      DeleteDirectory(GetEnv(AEnv));
 
     ForceDirectories(GetEnv(AEnv));
 
