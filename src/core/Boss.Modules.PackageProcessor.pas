@@ -86,19 +86,23 @@ end;
 procedure TBossPackageProcessor.MakeLink(AProjectPath, AEnv: string);
 var
   LCommand: PChar;
+  LFile: string;
 begin
-  System.TMonitor.Enter(Self);
   try
     if DirectoryExists(GetEnv(AEnv)) then
       TFile.Delete(GetEnv(AEnv));
-    LCommand := PChar(Format('cmd /c mklink /D /J "%0:s" "%1:s"',
-    [GetEnv(AEnv), AProjectPath + TPath.DirectorySeparatorChar + C_MODULES_FOLDER + '.' + AEnv]));
-    ExecuteAndWait(LCommand);
+
+    ForceDirectories(GetEnv(AEnv));
+
+    for LFile in TDirectory.GetFiles(AProjectPath + TPath.DirectorySeparatorChar + C_MODULES_FOLDER + '.' + AEnv) do
+    begin
+      TFile.Copy(LFile, TPath.Combine(GetEnv(AEnv), TPath.GetFileName(LFile)), True);
+    end;
+
   except
     on E: Exception do
       TProviderMessage.GetInstance.WriteLn('Failed on make link: ' + E.Message);
   end;
-  System.TMonitor.Exit(Self);
 end;
 
 constructor TBossPackageProcessor.Create;
@@ -109,6 +113,12 @@ begin
 
   if FileExists(GetDataCachePath) then
     FDataFile.LoadFromFile(GetDataCachePath);
+
+  if not FDataFile.Values[BPLS].IsEmpty then
+  begin
+    FDataFile.Delimiter := ';';
+    FDataFile.DelimitedText := FDataFile.Values[BPLS];
+  end;
 
   if DirectoryExists(GetEnv(EmptyStr)) then
     ForceDirectories(GetEnv(EmptyStr));
