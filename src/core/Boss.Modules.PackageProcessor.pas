@@ -9,6 +9,8 @@ type
   TBossPackageProcessor = class
   private
     FDataFile: TStringList;
+    FHomeDrive: string;
+    FHomePath: string;
 
     function GetBplList: TStringDynArray;
     function GetBinList(ARootPath: string): TStringDynArray;
@@ -76,11 +78,8 @@ end;
 
 function TBossPackageProcessor.GetEnv(AEnv: string): string;
 begin
-  Result := GetEnvironmentVariable('HOMEDRIVE') + GetEnvironmentVariable('HOMEPATH') + TPath.DirectorySeparatorChar +
-    C_BOSS_CACHE_FOLDER + TPath.DirectorySeparatorChar + C_ENV + AEnv;
-
-  if DirectoryExists(GetEnv(EmptyStr)) then
-    ForceDirectories(GetEnv(EmptyStr));
+  Result := FHomeDrive + FHomePath + TPath.DirectorySeparatorChar + C_BOSS_CACHE_FOLDER + TPath.DirectorySeparatorChar
+    + C_ENV + AEnv;
 end;
 
 
@@ -88,6 +87,7 @@ procedure TBossPackageProcessor.MakeLink(AProjectPath, AEnv: string);
 var
   LCommand: PChar;
 begin
+  System.TMonitor.Enter(Self);
   try
     if DirectoryExists(GetEnv(AEnv)) then
       TFile.Delete(GetEnv(AEnv));
@@ -98,14 +98,20 @@ begin
     on E: Exception do
       TProviderMessage.GetInstance.WriteLn('Failed on make link: ' + E.Message);
   end;
+  System.TMonitor.Exit(Self);
 end;
 
 constructor TBossPackageProcessor.Create;
 begin
   FDataFile := TStringList.Create;
+  FHomeDrive := GetEnvironmentVariable('HOMEDRIVE');
+  FHomePath := GetEnvironmentVariable('HOMEPATH');
 
   if FileExists(GetDataCachePath) then
     FDataFile.LoadFromFile(GetDataCachePath);
+
+  if DirectoryExists(GetEnv(EmptyStr)) then
+    ForceDirectories(GetEnv(EmptyStr));
 
   UnloadOlds;
 end;
@@ -148,7 +154,7 @@ end;
 
 function TBossPackageProcessor.GetDataCachePath: string;
 begin
-  Result := GetEnvironmentVariable('HOMEDRIVE') + GetEnvironmentVariable('HOMEPATH') + TPath.DirectorySeparatorChar +
+  Result := FHomeDrive + FHomePath + TPath.DirectorySeparatorChar +
     C_BOSS_CACHE_FOLDER + TPath.DirectorySeparatorChar + C_DATA_FILE;
 end;
 
