@@ -22,7 +22,7 @@ type
 
     procedure LoadTools(AProjectPath: string);
     procedure MakeLink(AProjectPath, AEnv: string);
-    procedure DoLoadBpls(ABpls: TArray<string>);
+    procedure DoLoadBpls(ABpls: TStringDynArray);
 
     constructor Create;
   public
@@ -149,7 +149,9 @@ var
   LOrderFileName: string;
   LOrder: TStringList;
   LIndex: Integer;
+  I: Integer;
 begin
+  Result := Nil;
   if not DirectoryExists(GetEnv(C_ENV_BPL)) then
     Exit();
 
@@ -163,7 +165,9 @@ begin
       for LIndex := 0 to LOrder.Count - 1 do
         LOrder.Strings[LIndex] := GetEnv(C_ENV_BPL) + TPath.DirectorySeparatorChar + LOrder.Strings[LIndex];
 
-      Result := LOrder.ToStringArray;
+      SetLength(Result, LOrder.Count);
+      for I := 0 to LOrder.Count - 1 do
+        Result[I] := LOrder[I];
     finally
       LOrder.Free;
     end;
@@ -198,7 +202,7 @@ begin
   DoLoadBpls(LBpls);
 end;
 
-procedure TBossPackageProcessor.DoLoadBpls(ABpls: TArray<string>);
+procedure TBossPackageProcessor.DoLoadBpls(ABpls: TStringDynArray);
 var
   LBpl: string;
   LFlag: Integer;
