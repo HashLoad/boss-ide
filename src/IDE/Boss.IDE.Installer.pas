@@ -2,8 +2,7 @@ unit Boss.IDE.Installer;
 
 interface
 
-uses
-  ToolsApi;
+uses ToolsApi;
 
 type
   TBossIDEInstaller = class
@@ -14,10 +13,7 @@ type
 
 implementation
 
-uses
-  System.Classes, Providers.Message, System.SysUtils;
-
-{ TBossIDEInstaller }
+uses System.Classes, Providers.Message, System.SysUtils;
 
 class function TBossIDEInstaller.InstallBpl(const AFile: string): Boolean;
 var
@@ -32,7 +28,7 @@ begin
   except
     on E: Exception do
     begin
-      TProviderMessage.GetInstance.WriteLn('Failed to load ' + AFile);
+      TProviderMessage.GetInstance.WriteLn('Failed to install ' + AFile);
       TProviderMessage.GetInstance.WriteLn(#10 + E.Message);
       LResult := False;
     end;
@@ -51,7 +47,12 @@ begin
         LResult := (BorlandIDEServices as IOTAPAckageServices).UninstallPackage(AFile)
       end);
   except
-    LResult := False;
+    on E: Exception do
+    begin
+      TProviderMessage.GetInstance.WriteLn('Failed to remove ' + AFile);
+      TProviderMessage.GetInstance.WriteLn(#10 + E.Message);
+      LResult := False;
+    end;
   end;
   Result := LResult;
 end;

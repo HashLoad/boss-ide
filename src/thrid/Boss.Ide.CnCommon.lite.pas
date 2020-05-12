@@ -2,8 +2,7 @@ unit Boss.Ide.CnCommon.lite;
 
 interface
 
-uses
-  System.Classes;
+uses System.Classes;
 
 function _CnExtractFileDir(const FileName: string): string;
 function _CnExtractFilePath(const FileName: string): string;
@@ -19,8 +18,7 @@ function AddDirSuffix(const Dir: string): string;
 
 implementation
 
-uses
-  System.SysUtils, Winapi.Windows;
+uses System.SysUtils, Winapi.Windows;
 
 procedure MultiSzToStrings(const Dest: TStrings; const Source: PChar);
 var
@@ -83,7 +81,8 @@ var
 begin
   I := LastDelimiter('.' + PathDelim + DriveDelim, FileName);
   if (I > 0) and (FileName[I] = '.') then
-    Result := Copy(FileName, I, MaxInt) else
+    Result := Copy(FileName, I, MaxInt)
+  else
     Result := '';
 end;
 {$ELSE}
@@ -156,6 +155,7 @@ begin
   TailHasRoot := (AnsiPos(':\', Tail) = 2) or // C:\Test
                  (AnsiPos('\\', Tail) = 1) or // \\Name\C\Test
                  (AnsiPos('://', Tail) > 0);  // ftp://ftp.abc.com
+
   if TailHasRoot then
   begin
     Result := Tail;
@@ -180,7 +180,8 @@ begin
         Result := Copy(AHead, 1, i + 1) + ATail
       else
         Result := AHead + ATail;
-    end else if HeadIsUrl then
+    end
+    else if HeadIsUrl then
     begin
       S := Copy(AHead, UrlPos + 3, MaxInt);
       i := AnsiPos('\', S);
@@ -217,7 +218,8 @@ end;
 function MakeDir(const Path: string): string;
 begin
   Result := Trim(Path);
-  if Result = '' then Exit;
+  if Result = '' then
+    Exit;
   if CharInSet(Result[Length(Result)], ['/', '\']) then
     Delete(Result, Length(Result), 1);
 end;
@@ -230,7 +232,8 @@ end;
 function AddDirSuffix(const Dir: string): string;
 begin
   Result := Trim(Dir);
-  if Result = '' then Exit;
+  if Result = '' then
+    Exit;
   if not IsPathDelimiter(Result, Length(Result)) then
     Result := Result + {$IFDEF MSWINDOWS} '\'; {$ELSE} '/'; {$ENDIF};
 end;

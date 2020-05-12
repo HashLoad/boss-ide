@@ -2,8 +2,7 @@ unit Boss.IDE.PojectListener;
 
 interface
 
-uses
-  ToolsAPI, System.Generics.Collections, System.SysUtils;
+uses ToolsAPI, System.Generics.Collections, System.SysUtils;
 
 type
   TBossProjectListener = class(TNotifierObject, IOTAIDENotifier)
@@ -21,7 +20,6 @@ type
     procedure Modified;
     constructor Create;
   public
-
     procedure AddListener(AType: TOTAFileNotification; ACallback: TProc<string>);
     procedure RemoveListener(AType: TOTAFileNotification; ACallback: TProc<string>);
     class function GetInstance: TBossProjectListener;
@@ -30,13 +28,10 @@ type
 
 implementation
 
-uses
-  Winapi.Windows;
+uses Winapi.Windows;
 
 var
   FInstance: TBossProjectListener;
-
-  { TBossProjectListener }
 
 procedure TBossProjectListener.AddListener(AType: TOTAFileNotification; ACallback: TProc<string>);
 var
@@ -93,7 +88,6 @@ var
 begin
   if not FListeners.TryGetValue(NotifyCode, LListeners) then
     Exit;
-
   for LCallback in LListeners do
   begin
     LCallback(FileName);
@@ -117,9 +111,7 @@ var
   LListeners: TList<TProc<string>>;
 begin
   if FListeners.TryGetValue(AType, LListeners) then
-  begin
     LListeners.Remove(ACallback);
-  end;
 end;
 
 end.
