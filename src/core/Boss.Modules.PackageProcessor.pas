@@ -86,7 +86,6 @@ end;
 
 procedure TBossPackageProcessor.MakeLink(AProjectPath, AEnv: string);
 var
-  LCommand: pchar;
   LFile: string;
 begin
   try
