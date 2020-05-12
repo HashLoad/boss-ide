@@ -6,9 +6,8 @@ procedure Register;
 
 implementation
 
-uses
-  ToolsAPI, Winapi.Windows, Boss.IDE.BossInstall, Boss.IDE.PojectListener, Boss.Modules.PackageProcessor,
-  Vcl.Graphics, DesignIntf, System.Types, Providers.Logo, Providers.Message, Boss.Ide.OpenToolApi.Tools;
+uses ToolsAPI, Winapi.Windows, Boss.IDE.BossInstall, Boss.IDE.PojectListener, Boss.Modules.PackageProcessor, Vcl.Graphics,
+  DesignIntf, System.Types, Providers.Logo, Providers.Message, Boss.Ide.OpenToolApi.Tools;
 
 const
   C_INVALID_NOTIFIER = -1;
@@ -39,18 +38,11 @@ begin
   end;
 
   LProjectManager := (BorlandIDEServices as IOTAProjectManager);
-
   LServices := (BorlandIDEServices as IOTAServices);
-
-
   LMessageServices := (BorlandIDEServices as IOTAMessageServices);
-
   FNotifierMenuIndex := LProjectManager.AddMenuItemCreatorNotifier(TMenuNotifierBossInstall.Create);
-
   FNotifierProjectIndex := LServices.AddNotifier(TBossProjectListener.GetInstance);
-
   TProviderMessage.GetInstance.Initialize(LMessageServices);
-
   TBossProjectListener.GetInstance.AddListener(ofnActiveProjectChanged, TBossPackageProcessor.OnActiveProjectChanged);
 end;
 

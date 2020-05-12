@@ -2,8 +2,7 @@ unit Boss.Modules.PackageProcessor;
 
 interface
 
-uses
-  System.IniFiles, System.Classes, System.Types;
+uses System.IniFiles, System.Classes, System.Types;
 
 type
   TBossPackageProcessor = class
@@ -29,10 +28,9 @@ type
     procedure LoadBpls;
     procedure UnloadOlds;
 
-    class Procedure OnActiveProjectChanged(AProject: string);
+    class procedure OnActiveProjectChanged(AProject: string);
     class function GetInstance: TBossPackageProcessor;
   end;
-
 
 const
   BPLS = 'BPLS';
@@ -40,11 +38,8 @@ const
 
 implementation
 
-uses
-  System.IOUtils, Providers.Consts, Boss.IDE.Installer, Providers.Message, Vcl.Dialogs, ToolsAPI,
-  Boss.IDE.OpenToolApi.Tools, Winapi.ShellAPI, Winapi.Windows, Vcl.Menus, Boss.EventWrapper, Vcl.Forms, System.SysUtils;
-
-{ TBossPackageProcessor }
+uses System.IOUtils, Providers.Consts, Boss.IDE.Installer, Providers.Message, Vcl.Dialogs, ToolsAPI, Boss.IDE.OpenToolApi.Tools,
+  Winapi.ShellAPI, Winapi.Windows, Vcl.Menus, Boss.EventWrapper, Vcl.Forms, System.SysUtils;
 
 var
   _Instance: TBossPackageProcessor;
@@ -53,15 +48,14 @@ procedure ExecuteAndWait(const ACommand: string);
 var
   LStartup: TStartupInfo;
   LProcess: TProcessInformation;
-  LProgram: String;
+  LProgram: string;
 begin
   LProgram := Trim(ACommand);
   FillChar(LStartup, SizeOf(LStartup), 0);
   LStartup.cb := SizeOf(TStartupInfo);
   LStartup.wShowWindow := SW_HIDE;
 
-  if CreateProcess(nil, pchar(LProgram), nil, nil, true, CREATE_NO_WINDOW,
-    nil, nil, LStartup, LProcess) then
+  if CreateProcess(nil, pchar(LProgram), nil, nil, true, CREATE_NO_WINDOW, nil, nil, LStartup, LProcess) then
   begin
     while WaitForSingleObject(LProcess.hProcess, 10) > 0 do
     begin
@@ -71,15 +65,12 @@ begin
     CloseHandle(LProcess.hThread);
   end
   else
-  begin
     RaiseLastOSError;
-  end;
 end;
 
 function TBossPackageProcessor.GetEnv(AEnv: string): string;
 begin
-  Result := FHomeDrive + FHomePath + TPath.DirectorySeparatorChar + C_BOSS_CACHE_FOLDER + TPath.DirectorySeparatorChar
-    + C_ENV + AEnv;
+  Result := FHomeDrive + FHomePath + TPath.DirectorySeparatorChar + C_BOSS_CACHE_FOLDER + TPath.DirectorySeparatorChar + C_ENV + AEnv;
 end;
 
 procedure DeleteDirectory(const DirName: string);
@@ -88,14 +79,14 @@ var
 begin
   FillChar(FileOp, SizeOf(FileOp), 0);
   FileOp.wFunc := FO_DELETE;
-  FileOp.pFrom := PChar(DirName+#0);
+  FileOp.pFrom := pchar(DirName + #0);
   FileOp.fFlags := FOF_SILENT or FOF_NOERRORUI or FOF_NOCONFIRMATION;
   SHFileOperation(FileOp);
 end;
 
 procedure TBossPackageProcessor.MakeLink(AProjectPath, AEnv: string);
 var
-  LCommand: PChar;
+  LCommand: pchar;
   LFile: string;
 begin
   try
@@ -106,9 +97,8 @@ begin
 
     for LFile in TDirectory.GetFiles(AProjectPath + TPath.DirectorySeparatorChar + C_MODULES_FOLDER + '.' + AEnv) do
     begin
-      TFile.Copy(LFile, TPath.Combine(GetEnv(AEnv), TPath.GetFileName(LFile)), True);
+      TFile.Copy(LFile, TPath.Combine(GetEnv(AEnv), TPath.GetFileName(LFile)), true);
     end;
-
   except
     on E: Exception do
       TProviderMessage.GetInstance.WriteLn('Failed on make link: ' + E.Message);
@@ -126,7 +116,7 @@ begin
 
   if not FDataFile.Values[BPLS].IsEmpty then
   begin
-    FDataFile.Delimiter := ';';
+    FDataFile.DELIMITER := ';';
     FDataFile.DelimitedText := FDataFile.Values[BPLS];
   end;
 
@@ -151,10 +141,9 @@ var
   LIndex: Integer;
   I: Integer;
 begin
-  Result := Nil;
+  Result := nil;
   if not DirectoryExists(GetEnv(C_ENV_BPL)) then
     Exit();
-
 
   LOrderFileName := GetEnv(C_ENV_BPL) + TPath.DirectorySeparatorChar + C_BPL_ORDER;
   if FileExists(LOrderFileName) then
@@ -178,8 +167,7 @@ end;
 
 function TBossPackageProcessor.GetDataCachePath: string;
 begin
-  Result := FHomeDrive + FHomePath + TPath.DirectorySeparatorChar +
-    C_BOSS_CACHE_FOLDER + TPath.DirectorySeparatorChar + C_DATA_FILE;
+  Result := FHomeDrive + FHomePath + TPath.DirectorySeparatorChar + C_BOSS_CACHE_FOLDER + TPath.DirectorySeparatorChar + C_DATA_FILE;
 end;
 
 class function TBossPackageProcessor.GetInstance: TBossPackageProcessor;
@@ -223,7 +211,7 @@ begin
       on E: Exception do
       begin
         TProviderMessage.GetInstance.WriteLn('Failed to get info of ' + LBpl);
-        TProviderMessage.GetInstance.WriteLn(#10 + E.message);
+        TProviderMessage.GetInstance.WriteLn(#10 + E.Message);
         LBplsRedo := LBplsRedo + [LBpl];
         Continue;
       end;
@@ -235,13 +223,13 @@ begin
       begin
         TProviderMessage.GetInstance.WriteLn('Instaled: ' + LBpl);
         FDataFile.Add(LBpl);
-        LInstalledNew := True;
+        LInstalledNew := true;
       end
       else
         LBplsRedo := LBplsRedo + [LBpl];
     end;
   end;
-  
+
   SaveData;
 
   if LInstalledNew then
@@ -291,7 +279,7 @@ begin
 end;
 
 procedure TBossPackageProcessor.SaveData;
-begin      
+begin
   FDataFile.SaveToFile(GetDataCachePath);
 end;
 
@@ -309,9 +297,9 @@ begin
     Application.ProcessMessages;
   end;
 
-  FDataFile.Clear;    
+  FDataFile.Clear;
   SaveData;
-  
+
   LMenu := NativeServices.MainMenu.Items.Find('Tools');
 
   NativeServices.MenuBeginUpdate;
@@ -333,7 +321,6 @@ end;
 initialization
 
 finalization
-
-_Instance.Free;
+  _Instance.Free;
 
 end.

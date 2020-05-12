@@ -2,8 +2,7 @@ unit Boss.IDE.Installer;
 
 interface
 
-uses
-  ToolsApi;
+uses ToolsApi;
 
 type
   TBossIDEInstaller = class
@@ -14,10 +13,7 @@ type
 
 implementation
 
-uses
-  System.Classes, Providers.Message, System.SysUtils;
-
-{ TBossIDEInstaller }
+uses System.Classes, Providers.Message, System.SysUtils;
 
 class function TBossIDEInstaller.InstallBpl(const AFile: string): Boolean;
 var

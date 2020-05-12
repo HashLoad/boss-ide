@@ -8,8 +8,7 @@ type
   TMenuNotifierBossInstall = class(TNotifierObject, IOTANotifier, IOTAProjectMenuItemCreatorNotifier)
   public
     function CanHandle(const Ident: string): Boolean;
-    procedure AddMenu(const Project: IOTAProject; const IdentList: TStrings;
-      const ProjectManagerMenuList: IInterfaceList; IsMultiSelect: Boolean);
+    procedure AddMenu(const Project: IOTAProject; const IdentList: TStrings; const ProjectManagerMenuList: IInterfaceList; IsMultiSelect: Boolean);
   end;
 
   TButtonBoss = class(TNotifierObject, IOTALocalMenu, IOTAProjectManagerMenu)
