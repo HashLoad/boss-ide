@@ -194,7 +194,7 @@ end;
 procedure TMenuNotifierBossInstall.AddMenu(const Project: IOTAProject; const IdentList: TStrings;
   const ProjectManagerMenuList: IInterfaceList; IsMultiSelect: Boolean);
 begin
-  if CanHandle(Project.ApplicationType) and (not IsMultiSelect) and Assigned(Project) and
+  if Assigned(Project) and CanHandle(Project.ApplicationType) and (not IsMultiSelect) and
     (IdentList.IndexOf(sProjectContainer) <> -1) and Assigned(ProjectManagerMenuList) then
   begin
     ProjectManagerMenuList.Add(TButtonBossSeparator.Create(Project));
