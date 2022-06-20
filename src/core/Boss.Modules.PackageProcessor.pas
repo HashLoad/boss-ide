@@ -192,13 +192,14 @@ end;
 procedure TBossPackageProcessor.DoLoadBpls(ABpls: TStringDynArray);
 var
   LBpl: string;
-  LFlag: Integer;
+  LLength, LFlag: Integer;
   LHnd: NativeUInt;
   LBplsRedo: TStringDynArray;
   LInstalledNew: Boolean;
 begin
   LInstalledNew := False;
-  LBplsRedo := [];
+  LLength := 0;
+  SetLength(LBplsRedo, LLength);
 
   for LBpl in ABpls do
   begin
@@ -211,7 +212,9 @@ begin
       begin
         TProviderMessage.GetInstance.WriteLn('Failed to get info of ' + LBpl);
         TProviderMessage.GetInstance.WriteLn(#10 + E.Message);
-        LBplsRedo := LBplsRedo + [LBpl];
+        Inc(ALength);
+        SetLength(LBplsRedo, LLength);
+        LBplsRedo[LLength - 1] := LBpl;
         Continue;
       end;
     end;
@@ -225,7 +228,12 @@ begin
         LInstalledNew := true;
       end
       else
-        LBplsRedo := LBplsRedo + [LBpl];
+      begin
+        Inc(ALength);
+        SetLength(LBplsRedo, LLength);
+        LBplsRedo[LLength - 1] := LBpl;
+      end;
+
     end;
   end;
 

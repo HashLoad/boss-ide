@@ -2,7 +2,7 @@ unit Providers.Logo;
 
 interface
 
-uses System.SysUtils, System.Classes, System.ImageList, Vcl.ImgList, Vcl.Controls;
+uses System.SysUtils, System.Classes, Vcl.ImgList, Vcl.Controls;
 
 type
   TDataModuleLogo = class(TDataModule)
